@@ -1,0 +1,26 @@
+name: Throttle
+
+on:
+  workflow_dispatch:
+
+jobs:
+  throttle:
+    runs-on: ubuntu-latest
+    env:
+      # Requires a fine-grained PAT with RW access to `actions variables`.
+      GH_TOKEN: ${{ secrets.GH_TOKEN_VARS }}
+
+    steps:
+      - name: Init PREV_BUILD_TIMESTAMP var
+        if: ${{ vars.PREV_BUILD_TIMESTAMP == '' }}
+        run: |
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ github.repository }}/actions/variables \
+            -f "name=PREV_BUILD_TIMESTAMP" -f "value=0"
+      - name: Check build age
+        run: |
+          now=$(date "+%s")
+          echo "Build age: " $(($now - ${{ vars.PREV_BUILD_TIMESTAMP}}))

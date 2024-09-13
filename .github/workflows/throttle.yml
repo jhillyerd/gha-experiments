@@ -8,10 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Requires a fine-grained PAT with RW access to `actions variables`.
+      # Should move this down to only the steps that require it.
       GH_TOKEN: ${{ secrets.GH_TOKEN_VARS }}
+      # Minimum seconds between builds.
+      MIN_BUILD_AGE: 120
 
     steps:
-      - name: Init PREV_BUILD_TIMESTAMP var
+      - name: Initalize PREV_BUILD_TIMESTAMP var
         if: ${{ vars.PREV_BUILD_TIMESTAMP == '' }}
         run: |
           gh api \
@@ -20,13 +23,18 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /repos/${{ github.repository }}/actions/variables \
             -f "name=PREV_BUILD_TIMESTAMP" -f "value=0"
-      - name: Check build age
+      - name: Check if ready to build again
         run: |
           now=$(date "+%s")
-          echo "Build age:" $(($now - ${{ vars.PREV_BUILD_TIMESTAMP}}))
+          age=$(($now - ${{ vars.PREV_BUILD_TIMESTAMP }}))
+          ready=$(($age >= ${{ env.MIN_BUILD_AGE }}))
+          echo "Previous build is $age seconds old, ready=$ready"
           echo "BUILD_NOW=$now" >> $GITHUB_ENV
+          echo "BUILD_READY=$ready" >> $GITHUB_ENV
       - name: Update PREV_BUILD_TIMESTAMP var
+        if: ${{ env.BUILD_READY != '0' }}
         run: |
+          echo "Do a build!"
           gh api \
             --method PATCH \
             -H "Accept: application/vnd.github+json" \

@@ -11,11 +11,22 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       # Workflow that must pass for a commit to be buildable.
       WORKFLOW_ID: "118572510"
+      # Prefix for YYYYMMDD tags.
+      TAG_PREFIX: "build-"
 
     steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+          # Must be able to push tags to repo.
+          token: ${{ secrets.GH_TOKEN_VARS }}
+
       - name: Get workflow status
         run: |
           set -x
+          NEW_TAG="$TAG_PREFIX$(date "+%Y%m%d-%H%M")"
+
           # Get commit SHA of latest passing workflow.
           passing_sha=$(gh api \
             -H "Accept: application/vnd.github+json" \
@@ -24,8 +35,16 @@ jobs:
             --jq ".workflow_runs | sort_by(.run_started_at) | last | .head_sha")
 
           if [[ -n "$passing_sha" ]]; then
-            echo passing $passing_sha
+            echo "Passing SHA: $passing_sha"
           else
             echo "Did not getting a passing build SHA"
             exit 128
+          fi
+
+          # Tag if untagged.
+          git tag --points-at $passing_sha
+          if ! git tag --points-at $passing_sha | grep -qe "^$TAG_PREFIX"; then
+            echo "Tagging release $NEW_TAG"
+            git tag "$NEW_TAG" $passing_sha
+            git push origin "$NEW_TAG"
           fi

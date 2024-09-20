@@ -1,0 +1,17 @@
+name: Pass Fail
+
+on:
+  workflow_dispatch:
+    inputs:
+      desired_result:
+        description: "'pass' or 'fail'"
+        default: "pass"
+        required: true
+
+jobs:
+  pass_fail:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get workflow status
+        run: |
+          [[ "${{ github.event.inputs.desired_result }}" == "pass" ]]

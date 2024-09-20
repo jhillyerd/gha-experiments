@@ -1,0 +1,31 @@
+name: Workflow Status
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      # Workflow that must pass for a commit to be buildable.
+      WORKFLOW_ID: "118572510"
+
+    steps:
+      - name: Get workflow status
+        run: |
+          set -x
+          # Get commit SHA of latest passing workflow.
+          passing_sha=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "/repos/${{ github.repository }}/actions/workflows/$WORKFLOW_ID/runs?branch=main" \
+            --jq ".workflow_runs | sort_by(.run_started_at) | last | .head_sha")
+
+          if [[ -n "$passing_sha" ]]; then
+            echo passing $passing_sha
+          else
+            echo "Did not getting a passing build SHA"
+            exit 128
+          fi

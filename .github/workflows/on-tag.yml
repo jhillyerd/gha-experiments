@@ -1,0 +1,21 @@
+name: On Tag
+
+on:
+  push:
+    tags:
+      - 'build-*'
+  workflow_dispatch:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Check out ${{ env.GITHUB_REF }}"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: "${{ env.GITHUB_REF }}"
+      - name: "Git show"
+        run: |
+          git show

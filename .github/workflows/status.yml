@@ -2,7 +2,7 @@ name: Workflow Status Build Tagger
 
 on:
   workflow_dispatch:
-  push:
+  # Would be on a cron schedule for prod use.
 
 jobs:
   tagger:
@@ -36,14 +36,13 @@ jobs:
             "/repos/${{ github.repository }}/actions/workflows/$WORKFLOW_ID/runs?branch=main&status=success" \
             --jq '.workflow_runs | sort_by(.run_started_at) | last | .head_sha')
 
-          if [[ -n "$passing_sha" ]]; then
-            echo "Passing commit SHA: $passing_sha"
-          else
+          if [[ -z "$passing_sha" ]]; then
             echo "Did not getting a passing build commit SHA"
             exit 128
           fi
 
           # Tag if untagged.
+          echo "Passing commit SHA: $passing_sha"
           if ! git tag --points-at $passing_sha | grep -qe "^$TAG_PREFIX"; then
             echo "Tagging build $NEW_TAG"
             git tag "$NEW_TAG" $passing_sha

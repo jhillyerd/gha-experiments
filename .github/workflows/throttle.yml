@@ -2,6 +2,8 @@ name: Throttle
 
 on:
   workflow_dispatch:
+  # Would likely be tacked onto the end of your CI workflow, rather than
+  # stand-alone.
 
 jobs:
   throttle:

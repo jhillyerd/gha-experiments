@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  docker:
+  setup:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,3 +19,9 @@ jobs:
       - name: "Git show"
         run: |
           git show
+
+  push:
+    needs: setup
+    uses: ./.github/workflows/fake-push.yml
+    with:
+      image-tag: "${{ env.GITHUB_REF }}"

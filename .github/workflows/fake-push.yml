@@ -1,0 +1,17 @@
+name: Fake Push
+
+on:
+  workflow_call:
+    inputs:
+      image-tag:
+        description: 'Docker image tag to push'
+        type: string
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Report"
+        run: |
+          echo "Here I would push the image tagged ${{ inputs.image-tag }}"

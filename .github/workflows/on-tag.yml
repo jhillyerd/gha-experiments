@@ -24,3 +24,9 @@ jobs:
     uses: ./.github/workflows/fake-push.yml
     with:
       image-tag: "${{ github.ref_name }}"
+
+  deploy:
+    needs: setup
+    uses: ./.github/workflows/fake-deploy.yml
+    with:
+      image-tag: "${{ github.ref_name }}"

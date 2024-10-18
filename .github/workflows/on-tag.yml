@@ -23,4 +23,4 @@ jobs:
     needs: setup
     uses: ./.github/workflows/fake-push.yml
     with:
-      image-tag: ${{ env.GITHUB_REF }}
+      image-tag: "${{ github.ref_name }}"

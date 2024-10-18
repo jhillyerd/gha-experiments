@@ -15,3 +15,4 @@ jobs:
       - name: "Report"
         run: |
           echo "Here I would push the image tagged ${{ inputs.image-tag }}"
+          false

@@ -1,4 +1,4 @@
-name: Pass Fail
+name: "1. Pass Fail"
 
 on:
   workflow_dispatch:

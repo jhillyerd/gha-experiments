@@ -1,4 +1,4 @@
-name: On Tag
+name: "3. On Tag"
 
 on:
   push:
@@ -29,4 +29,5 @@ jobs:
     needs: setup
     uses: ./.github/workflows/fake-deploy.yml
     with:
+      image-name: "gha-exp"
       image-tag: "${{ github.ref_name }}"

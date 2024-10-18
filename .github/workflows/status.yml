@@ -1,4 +1,4 @@
-name: Workflow Status Build Tagger
+name: "2. Workflow Status Build Tagger"
 
 on:
   workflow_dispatch:

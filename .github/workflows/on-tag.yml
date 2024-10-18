@@ -26,7 +26,7 @@ jobs:
       image-tag: "${{ github.ref_name }}"
 
   deploy:
-    needs: setup
+    needs: push
     uses: ./.github/workflows/fake-deploy.yml
     with:
       image-name: "gha-exp"

@@ -15,3 +15,8 @@ jobs:
       - name: Get workflow status
         run: |
           [[ "${{ github.event.inputs.desired_result }}" == "pass" ]]
+
+  maybe_tag:
+    name: Tag if passed in lieu of scheduled job
+    needs: pass_fail
+    uses: ./.github/workflows/status.yml

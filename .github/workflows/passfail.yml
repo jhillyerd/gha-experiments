@@ -20,3 +20,4 @@ jobs:
     name: Tag if passed in lieu of scheduled job
     needs: pass_fail
     uses: ./.github/workflows/status.yml
+    secrets: inherit

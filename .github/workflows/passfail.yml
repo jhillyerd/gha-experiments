@@ -16,8 +16,11 @@ jobs:
         run: |
           [[ "${{ github.event.inputs.desired_result }}" == "pass" ]]
 
-  maybe_tag:
-    name: Tag if passed in lieu of scheduled job
-    needs: pass_fail
-    uses: ./.github/workflows/status.yml
-    secrets: inherit
+  # This doesn't work because *this* workflow hasn't finished, so the status
+  # workflow doesn't consider this ref for tagging.
+  #
+  # maybe_tag:
+  #   name: Tag if passed in lieu of scheduled job
+  #   needs: pass_fail
+  #   uses: ./.github/workflows/status.yml
+  #   secrets: inherit

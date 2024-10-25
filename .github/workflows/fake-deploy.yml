@@ -15,7 +15,11 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      # Test passing secret in workflow_call.
+      DEPLOY_KEY: ${{ secrets.GH_TOKEN_VARS }}
     steps:
       - name: "Report"
         run: |
+          if [[ -z "$DEPLOY_KEY" ]]; then echo "DEPLOY_KEY is empty"; exit 128; fi
           echo "Here I would deploy '${{ inputs.image-name }}:${{ inputs.image-tag }}'"

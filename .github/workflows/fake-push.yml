@@ -11,9 +11,12 @@ on:
 jobs:
   push:
     runs-on: ubuntu-latest
+    env:
+      DEPLOY_KEY: ${{ secrets.GH_TOKEN_VARS }}
     steps:
       - name: "Report"
         run: |
+          if [[ -n "$DEPLOY_KEY" ]]; then echo "DEPLOY_KEY is not empty"; fi
           echo "is empty!: ${{ env.GITHUB_REF }}"
           echo "has value: ${{ github.ref_name }}"
           echo "Here I would push the image tagged ${{ inputs.image-tag }}"

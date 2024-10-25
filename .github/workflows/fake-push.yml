@@ -14,4 +14,5 @@ jobs:
     steps:
       - name: "Report"
         run: |
+          echo "${{ github.ref_name }}"
           echo "Here I would push the image tagged ${{ inputs.image-tag }}"

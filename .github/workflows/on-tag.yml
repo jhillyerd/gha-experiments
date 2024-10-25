@@ -31,3 +31,4 @@ jobs:
     with:
       image-name: "gha-exp"
       image-tag: "${{ github.ref_name }}"
+    secrets: inherit

@@ -1,0 +1,14 @@
+name: Print info
+
+on:
+  push:
+
+jobs:
+  info:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_CONTEXT: ${{ toJson(github) }}
+    steps:
+      - name: "Report"
+        run: |
+          echo "GITHUB_CONTEXT: $GITHUB_CONTEXT"

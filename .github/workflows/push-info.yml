@@ -1,4 +1,4 @@
-name: Print info
+name: Print push info
 
 on:
   push:
@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: "Report"
         run: |
-          echo "GITHUB_CONTEXT: $GITHUB_CONTEXT"
+          echo "$GITHUB_CONTEXT"
